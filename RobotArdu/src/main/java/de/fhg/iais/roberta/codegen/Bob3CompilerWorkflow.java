@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.util.Base64;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +45,7 @@ public class Bob3CompilerWorkflow extends AbstractCompilerWorkflow {
 
     @Override
     public void compileSourceCode(String token, String programName, ILanguage language, Object flagProvider) {
-        this.storeGeneratedProgram(token, programName, ".ino");
+        this.storeGeneratedProgram(token, programName, ".cpp");
         if ( this.workflowResult == Key.COMPILERWORKFLOW_SUCCESS ) {
             this.workflowResult = this.runBuild(token, programName, "generated.main");
             if ( this.workflowResult == Key.COMPILERWORKFLOW_SUCCESS ) {
@@ -79,6 +78,7 @@ public class Bob3CompilerWorkflow extends AbstractCompilerWorkflow {
 
         String scriptName = "";
         String os = "";
+        /*
         if ( SystemUtils.IS_OS_LINUX ) {
             if ( System.getProperty("os.arch").contains("arm") ) {
                 scriptName = compilerResourcesDir + "arduino-builder/linux-arm/arduino-builder";
@@ -93,7 +93,7 @@ public class Bob3CompilerWorkflow extends AbstractCompilerWorkflow {
         } else if ( SystemUtils.IS_OS_MAC ) {
             scriptName = compilerResourcesDir + "arduino-builder/osx/arduino-builder";
             os = "arduino-builder/osx";
-        }
+        }*/
 
         Path path = Paths.get(tempDir + token + "/" + mainFile);
         Path base = Paths.get("");
