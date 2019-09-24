@@ -134,7 +134,7 @@ public class ProjectRestController {
             JSONObject response = new JSONObject();
             // To make this compatible with old frontend we will have to use the old names...
             response.put("cmd", "runPSim");
-            response.put("sourceCode", project.getSourceCode());
+            response.put("javaScriptProgram", project.getSourceCode());
             response.put("fileExtension", project.getFileExtension());
             response.put("data", project.getAnnotatedProgramAsXml());
             response.put("configuration", project.getAnnotatedConfigurationAsXml());
