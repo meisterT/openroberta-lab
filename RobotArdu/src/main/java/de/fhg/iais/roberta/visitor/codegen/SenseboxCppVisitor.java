@@ -61,9 +61,8 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
         ConfigurationAst brickConfiguration,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
         String SSID,
-        String password,
-        int indentation) {
-        super(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, indentation);
+        String password) {
+        super(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases);
         this.SSID = SSID;
         this.password = password;
     }
@@ -157,7 +156,7 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
         boolean withWrapping) {
         SenseboxCppVisitor astVisitor =
-            new SenseboxCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, "", "", withWrapping ? 1 : 0);
+            new SenseboxCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, "", "");
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }
@@ -171,7 +170,7 @@ public class SenseboxCppVisitor extends AbstractCommonArduinoCppVisitor implemen
         String password,
         boolean withWrapping) {
         SenseboxCppVisitor astVisitor =
-            new SenseboxCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, SSID, password, withWrapping ? 1 : 0);
+            new SenseboxCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, SSID, password);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }

@@ -17,7 +17,6 @@ public final class Ev3PythonGeneratorWorker implements IWorker {
                 (CodeGeneratorSetupBean) codeGeneratorSetupBean,
                 project.getConfigurationAst(),
                 project.getProgramAst().getTree(),
-                1,
                 project.getLanguage());
         visitor.setStringBuilders(project.getSourceCode(), project.getIndentation());
         visitor.generateCode(true);

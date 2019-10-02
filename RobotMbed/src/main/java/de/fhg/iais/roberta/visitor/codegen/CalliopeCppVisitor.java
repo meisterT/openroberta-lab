@@ -114,15 +114,13 @@ public final class CalliopeCppVisitor extends AbstractCppVisitor implements IMbe
      *
      * @param robotConfiguration hardware configuration of the brick
      * @param programPhrases to generate the code from
-     * @param indentation to start with. Will be incr/decr depending on block structure
      */
     CalliopeCppVisitor(
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ConfigurationAst robotConfiguration,
-        ArrayList<ArrayList<Phrase<Void>>> programPhrases,
-        int indentation) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, indentation);
+        ArrayList<ArrayList<Phrase<Void>>> programPhrases) {
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases);
         this.robotConfiguration = robotConfiguration;
 
     }
@@ -132,7 +130,6 @@ public final class CalliopeCppVisitor extends AbstractCppVisitor implements IMbe
      *
      * @param brickConfiguration hardware configuration of the brick
      * @param programPhrases to generate the code from
-     * @param indentation to start with. Will be incr/decr depending on block structure
      */
     public static String generate(
         UsedHardwareBean usedHardwareBean,
@@ -142,7 +139,7 @@ public final class CalliopeCppVisitor extends AbstractCppVisitor implements IMbe
         boolean withWrapping) {
         Assert.notNull(brickConfiguration);
 
-        final CalliopeCppVisitor astVisitor = new CalliopeCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, 0);
+        final CalliopeCppVisitor astVisitor = new CalliopeCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }

@@ -18,7 +18,6 @@ public final class Ev3JavaGeneratorWorker implements IWorker {
                 project.getProgramName(),
                 project.getProgramAst().getTree(),
                 project.getConfigurationAst(),
-                1,
                 project.getLanguage());
         visitor.setStringBuilders(project.getSourceCode(), project.getIndentation());
         visitor.generateCode(true);

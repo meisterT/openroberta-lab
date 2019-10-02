@@ -117,7 +117,6 @@ public class Ev3C4ev3Visitor extends AbstractCppVisitor implements IEv3Visitor<V
      * initialize the EV3 c4ev3 code generator visitor.
      *
      * @param programPhrases
-     * @param indentation to start with. Will be incr/decr depending on block structure
      */
     Ev3C4ev3Visitor(
         UsedHardwareBean usedHardwareBean,
@@ -125,9 +124,8 @@ public class Ev3C4ev3Visitor extends AbstractCppVisitor implements IEv3Visitor<V
         String programName,
         ConfigurationAst brickConfiguration,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
-        int indentation,
         ILanguage language) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, indentation);
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases);
         this.brickConfiguration = brickConfiguration;
         this.programName = programName;
         this.language = language;
@@ -162,7 +160,7 @@ public class Ev3C4ev3Visitor extends AbstractCppVisitor implements IEv3Visitor<V
         Assert.notNull(programName);
         Assert.notNull(brickConfiguration);
 
-        Ev3C4ev3Visitor astVisitor = new Ev3C4ev3Visitor(usedHardwareBean, codeGeneratorSetupBean, programName, brickConfiguration, phrasesSet, 0, language);
+        Ev3C4ev3Visitor astVisitor = new Ev3C4ev3Visitor(usedHardwareBean, codeGeneratorSetupBean, programName, brickConfiguration, phrasesSet, language);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }

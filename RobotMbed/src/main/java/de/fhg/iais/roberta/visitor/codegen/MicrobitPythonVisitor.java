@@ -71,9 +71,8 @@ public final class MicrobitPythonVisitor extends AbstractPythonVisitor implement
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ConfigurationAst brickConfiguration,
-        ArrayList<ArrayList<Phrase<Void>>> programPhrases,
-        int indentation) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, indentation);
+        ArrayList<ArrayList<Phrase<Void>>> programPhrases) {
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases);
     }
 
     /**
@@ -90,7 +89,7 @@ public final class MicrobitPythonVisitor extends AbstractPythonVisitor implement
         boolean withWrapping) {
         Assert.notNull(brickConfiguration);
 
-        final MicrobitPythonVisitor astVisitor = new MicrobitPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, 0);
+        final MicrobitPythonVisitor astVisitor = new MicrobitPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }
@@ -100,7 +99,7 @@ public final class MicrobitPythonVisitor extends AbstractPythonVisitor implement
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
         boolean withWrapping) {
-        final MicrobitPythonVisitor astVisitor = new MicrobitPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, null, programPhrases, 0);
+        final MicrobitPythonVisitor astVisitor = new MicrobitPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, null, programPhrases);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }

@@ -18,8 +18,7 @@ public class SenseboxCxxGeneratorWorker implements IWorker {
                 project.getConfigurationAst(),
                 project.getProgramAst().getTree(),
                 project.getSSID(),
-                project.getPassword(),
-                1);
+                project.getPassword());
         visitor.setStringBuilders(project.getSourceCode(), project.getIndentation());
         visitor.generateCode(true);
     }

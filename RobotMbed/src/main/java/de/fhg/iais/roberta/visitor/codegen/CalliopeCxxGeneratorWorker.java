@@ -16,8 +16,7 @@ public class CalliopeCxxGeneratorWorker implements IWorker {
                 (UsedHardwareBean) usedHardwareBean,
                 (CodeGeneratorSetupBean) codeGeneratorSetupBean,
                 project.getConfigurationAst(),
-                project.getProgramAst().getTree(),
-                0);
+                project.getProgramAst().getTree());
         visitor.setStringBuilders(project.getSourceCode(), project.getIndentation());
         visitor.generateCode(true);
     }

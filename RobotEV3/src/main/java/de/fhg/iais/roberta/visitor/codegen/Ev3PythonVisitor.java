@@ -85,16 +85,14 @@ public final class Ev3PythonVisitor extends AbstractPythonVisitor implements IEv
      *
      * @param brickConfiguration hardware configuration of the brick
      * @param programPhrases to generate the code from
-     * @param indentation to start with. Will be ince/decr depending on block structure
      */
     Ev3PythonVisitor(
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ConfigurationAst brickConfiguration,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
-        int indentation,
         ILanguage language) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, indentation);
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases);
         this.brickConfiguration = brickConfiguration;
         this.language = language;
 
@@ -116,7 +114,7 @@ public final class Ev3PythonVisitor extends AbstractPythonVisitor implements IEv
         ILanguage language) {
         Assert.notNull(brickConfiguration);
 
-        Ev3PythonVisitor astVisitor = new Ev3PythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, 0, language);
+        Ev3PythonVisitor astVisitor = new Ev3PythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, language);
         astVisitor.generateCode(withWrapping);
 
         return astVisitor.sb.toString();

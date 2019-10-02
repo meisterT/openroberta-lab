@@ -69,9 +69,8 @@ public class EdisonPythonVisitor extends AbstractPythonVisitor implements IEdiso
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ConfigurationAst brickConfig,
-        ArrayList<ArrayList<Phrase<Void>>> programPhrases,
-        int indentation) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, indentation);
+        ArrayList<ArrayList<Phrase<Void>>> programPhrases) {
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases);
     }
 
     /**
@@ -149,7 +148,7 @@ public class EdisonPythonVisitor extends AbstractPythonVisitor implements IEdiso
         boolean withWrapping) {
         Assert.notNull(brickCfg);
 
-        EdisonPythonVisitor visitor = new EdisonPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickCfg, programPhrases, 0);
+        EdisonPythonVisitor visitor = new EdisonPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickCfg, programPhrases);
         visitor.generateCode(withWrapping);
 
         return visitor.sb.toString();

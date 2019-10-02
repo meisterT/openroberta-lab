@@ -113,8 +113,6 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
      *
      * @param programName name of the program
      * @param brickConfiguration hardware configuration of the brick
-     * @param usedSensors in the current program
-     * @param indentation to start with. Will be ince/decr depending on block structure
      */
     public Ev3JavaVisitor(
         UsedHardwareBean usedHardwareBean,
@@ -122,9 +120,8 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         String programName,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
         ConfigurationAst brickConfiguration,
-        int indentation,
         ILanguage language) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, programName, indentation);
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, programName);
 
         this.brickConfiguration = brickConfiguration;
         this.language = language;
@@ -138,7 +135,7 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
      *
      * @param programName name of the program
      * @param brickConfiguration hardware configuration of the brick
-     * @param phrases to generate the code from
+     * @param phrasesSet to generate the code from
      */
     public static String generate(
         UsedHardwareBean usedHardwareBean,
@@ -152,7 +149,7 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         Assert.notNull(brickConfiguration);
 
         Ev3JavaVisitor astVisitor =
-            new Ev3JavaVisitor(usedHardwareBean, codeGeneratorSetupBean, programName, phrasesSet, brickConfiguration, withWrapping ? 1 : 0, language);
+            new Ev3JavaVisitor(usedHardwareBean, codeGeneratorSetupBean, programName, phrasesSet, brickConfiguration, language);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }
@@ -164,26 +161,48 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         }
         generateImports();
 
-        this.sb.append("public class " + this.programName + " {\n");
-        this.sb.append(this.INDENT).append("private static Configuration brickConfiguration;").append("\n\n");
-        this.sb.append(this.INDENT).append(generateRegenerateUsedSensors()).append("\n");
-        if ( this.usedHardwareBean.getUsedImages().size() != 0 ) {
-            this.sb.append(this.INDENT).append("private static Map<String, String> predefinedImages = new HashMap<String, String>();\n\n");
+        this.sb.append("public class ").append(this.programName).append(" {");
+        incrIndentation();
+        nlIndent();
+        this.sb.append("private static Configuration brickConfiguration;");
+        nlIndent();
+        nlIndent();
+        this.sb.append(generateRegenerateUsedSensors());
+        nlIndent();
+        if ( !this.usedHardwareBean.getUsedImages().isEmpty() ) {
+            this.sb.append("private static Map<String, String> predefinedImages = new HashMap<String, String>();");
+            nlIndent();
+            nlIndent();
         }
 
-        this.sb.append(this.INDENT).append("private Hal hal = new Hal(brickConfiguration, usedSensors);\n");
+        this.sb.append("private Hal hal = new Hal(brickConfiguration, usedSensors);");
+        nlIndent();
         generateUserDefinedMethods();
-        this.sb.append("\n");
-        this.sb.append(this.INDENT).append("public static void main(String[] args) {\n");
-        this.sb.append(this.INDENT).append(this.INDENT).append("try {\n");
-        this.sb.append(this.INDENT).append(this.INDENT).append(this.INDENT).append(generateRegenerateConfiguration()).append("\n");
+        nlIndent();
+        this.sb.append("public static void main(String[] args) {");
+        incrIndentation();
+        nlIndent();
+        this.sb.append("try {");
+        incrIndentation();
+        nlIndent();
+        generateRegenerateConfiguration();
+        nlIndent();
 
-        this.sb.append(generateUsedImages()).append("\n");
-        this.sb.append(this.INDENT).append(this.INDENT).append(this.INDENT).append("new ").append(this.programName).append("().run();\n");
-        this.sb.append(this.INDENT).append(this.INDENT).append("} catch ( Exception e ) {\n");
-        this.sb.append(this.INDENT).append(this.INDENT).append(this.INDENT).append("Hal.displayExceptionWaitForKeyPress(e);\n");
-        this.sb.append(this.INDENT).append(this.INDENT).append("}\n");
-        this.sb.append(this.INDENT).append("}");
+        generateUsedImages();
+        nlIndent();
+        this.sb.append("new ").append(this.programName).append("().run();");
+        decrIndentation();
+        nlIndent();
+        this.sb.append("} catch ( Exception e ) {");
+        incrIndentation();
+        nlIndent();
+        this.sb.append("Hal.displayExceptionWaitForKeyPress(e);");
+        decrIndentation();
+        nlIndent();
+        this.sb.append("}");
+        decrIndentation();
+        nlIndent();
+        this.sb.append("}");
     }
 
     @Override
@@ -191,7 +210,8 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         if ( withWrapping ) {
             if ( this.isInDebugMode ) {
                 nlIndent();
-                this.sb.append("hal.closeResources();\n");
+                this.sb.append("hal.closeResources();");
+                nlIndent();
             }
             decrIndentation();
             nlIndent();
@@ -675,13 +695,12 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         mainTask.getVariables().visit(this);
         nlIndent();
         nlIndent();
-        this.sb.append("public void run() throws Exception {\n");
+        this.sb.append("public void run() throws Exception {");
         incrIndentation();
         // this is needed for testing
         if ( mainTask.getDebug().equals("TRUE") ) {
             nlIndent();
             this.sb.append("hal.startLogging();");
-            //this.sb.append(INDENT).append(INDENT).append(INDENT).append("\nhal.startScreenLoggingThread();");
             this.isInDebugMode = true;
         }
         if ( this.usedHardwareBean.isSayTextUsed() && !this.brickConfiguration.getRobotName().equals("ev3lejosv0") ) {
@@ -1113,75 +1132,93 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         return null;
     }
 
-    /**
-     * @return Java code used in the code generation to regenerates the same brick configuration
-     */
-    public String generateRegenerateConfiguration() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" brickConfiguration = new EV3Configuration.Builder()\n");
-        sb.append(this.INDENT).append(this.INDENT).append(this.INDENT).append("    .setWheelDiameter(" + this.brickConfiguration.getWheelDiameterCM() + ")\n");
-        sb.append(this.INDENT).append(this.INDENT).append(this.INDENT).append("    .setTrackWidth(" + this.brickConfiguration.getTrackWidthCM() + ")\n");
-        appendActors(sb);
-        appendSensors(sb);
-        sb.append(this.INDENT).append(this.INDENT).append(this.INDENT).append("    .build();");
-        return sb.toString();
+    private void generateRegenerateConfiguration() {
+        this.sb.append(" brickConfiguration = new EV3Configuration.Builder()");
+        incrIndentation();
+        nlIndent();
+        this.sb.append(".setWheelDiameter(").append(this.brickConfiguration.getWheelDiameterCM()).append(")");
+        nlIndent();
+        this.sb.append(".setTrackWidth(").append(this.brickConfiguration.getTrackWidthCM()).append(")");
+        nlIndent();
+        appendActors();
+        appendSensors();
+        this.sb.append(".build();");
+        decrIndentation();
     }
 
-    private String generateUsedImages() {
-        StringBuilder sb = new StringBuilder();
+    private void generateUsedImages() {
         for ( String image : this.usedHardwareBean.getUsedImages() ) {
-            sb
-                .append(this.INDENT)
-                .append(this.INDENT)
-                .append(this.INDENT)
-                .append("predefinedImages.put(\"" + image + "\", \"" + this.predefinedImage.get(image) + "\");\n");
+            this.sb.append("predefinedImages.put(\"" + image + "\", \"" + this.predefinedImage.get(image) + "\");");
+            nlIndent();
         }
-        return sb.toString();
     }
 
     private void generateImports() {
-        this.sb.append("package generated.main;\n\n");
-        this.sb.append("import de.fhg.iais.roberta.runtime.*;\n");
-        this.sb.append("import de.fhg.iais.roberta.runtime.ev3.*;\n\n");
+        this.sb.append("package generated.main;");
+        nlIndent();
+        nlIndent();
+        this.sb.append("import de.fhg.iais.roberta.runtime.*;");
+        nlIndent();
+        this.sb.append("import de.fhg.iais.roberta.runtime.ev3.*;");
+        nlIndent();
+        nlIndent();
 
-        this.sb.append("import de.fhg.iais.roberta.mode.general.*;\n");
-        this.sb.append("import de.fhg.iais.roberta.mode.action.*;\n");
-        this.sb.append("import de.fhg.iais.roberta.mode.sensor.*;\n");
-        this.sb.append("import de.fhg.iais.roberta.mode.action.ev3.*;\n");
-        this.sb.append("import de.fhg.iais.roberta.mode.sensor.ev3.*;\n\n");
+        this.sb.append("import de.fhg.iais.roberta.mode.general.*;");
+        nlIndent();
+        this.sb.append("import de.fhg.iais.roberta.mode.action.*;");
+        nlIndent();
+        this.sb.append("import de.fhg.iais.roberta.mode.sensor.*;");
+        nlIndent();
+        this.sb.append("import de.fhg.iais.roberta.mode.action.ev3.*;");
+        nlIndent();
+        this.sb.append("import de.fhg.iais.roberta.mode.sensor.ev3.*;");
+        nlIndent();
+        nlIndent();
 
-        this.sb.append("import de.fhg.iais.roberta.components.*;\n\n");
+        this.sb.append("import de.fhg.iais.roberta.components.*;");
+        nlIndent();
+        nlIndent();
 
-        this.sb.append("import java.util.LinkedHashSet;\n");
-        this.sb.append("import java.util.HashMap;\n");
-        this.sb.append("import java.util.Set;\n");
-        this.sb.append("import java.util.Map;\n");
-        this.sb.append("import java.util.List;\n");
-        this.sb.append("import java.util.ArrayList;\n");
-        this.sb.append("import java.util.Arrays;\n\n");
-        this.sb.append("import java.util.Collections;\n");
+        this.sb.append("import java.util.LinkedHashSet;");
+        nlIndent();
+        this.sb.append("import java.util.HashMap;");
+        nlIndent();
+        this.sb.append("import java.util.Set;");
+        nlIndent();
+        this.sb.append("import java.util.Map;");
+        nlIndent();
+        this.sb.append("import java.util.List;");
+        nlIndent();
+        this.sb.append("import java.util.ArrayList;");
+        nlIndent();
+        this.sb.append("import java.util.Arrays;");
+        nlIndent();
+        this.sb.append("import java.util.Collections;");
+        nlIndent();
+        nlIndent();
 
-        this.sb.append("import lejos.remote.nxt.NXTConnection;\n\n");
+        this.sb.append("import lejos.remote.nxt.NXTConnection;");
+        nlIndent();
+        nlIndent();
     }
 
-    private void appendSensors(StringBuilder sb) {
-
+    private void appendSensors() {
         for ( ConfigurationComponent sensor : this.brickConfiguration.getSensors() ) {
-            sb.append(this.INDENT).append(this.INDENT).append(this.INDENT);
-            sb.append("    .addSensor(");
-            sb.append("SensorPort.S" + sensor.getUserDefinedPortName()).append(", ");
-            sb.append(generateRegenerateSensor(sensor));
-            sb.append(")\n");
+            this.sb.append(".addSensor(");
+            this.sb.append("SensorPort.S" + sensor.getUserDefinedPortName()).append(", ");
+            this.sb.append(generateRegenerateSensor(sensor));
+            this.sb.append(")");
+            nlIndent();
         }
     }
 
-    private void appendActors(StringBuilder sb) {
+    private void appendActors() {
         for ( ConfigurationComponent actor : this.brickConfiguration.getActors() ) {
-            sb.append(this.INDENT).append(this.INDENT).append(this.INDENT);
-            sb.append("    .addActor(");
-            sb.append("ActorPort." + actor.getUserDefinedPortName()).append(", ");
-            sb.append(generateRegenerateActor(actor));
-            sb.append(")\n");
+            this.sb.append(".addActor(");
+            this.sb.append("ActorPort." + actor.getUserDefinedPortName()).append(", ");
+            this.sb.append(generateRegenerateActor(actor));
+            this.sb.append(")");
+            nlIndent();
         }
     }
 

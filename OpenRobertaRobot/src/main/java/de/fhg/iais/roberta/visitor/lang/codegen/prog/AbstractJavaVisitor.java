@@ -58,18 +58,15 @@ public abstract class AbstractJavaVisitor extends AbstractLanguageVisitor {
     /**
      * initialize the Java code generator visitor.
      *
+     * @param programPhrases to generate the code from
      * @param programName name of the program
-     * @param brickConfiguration hardware configuration of the brick
-     * @param usedSensors in the current program
-     * @param indentation to start with. Will be ince/decr depending on block structure
      */
     protected AbstractJavaVisitor(
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
-        String programName,
-        int indentation) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, indentation);
+        String programName) {
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases);
         this.programName = programName;
     }
 
@@ -345,26 +342,35 @@ public abstract class AbstractJavaVisitor extends AbstractLanguageVisitor {
 
     @Override
     public Void visitMethodVoid(MethodVoid<Void> methodVoid) {
-        this.sb.append("\n").append(this.INDENT).append("private void ");
-        this.sb.append(methodVoid.getMethodName() + "(");
+        nlIndent();
+        this.sb.append("private void ");
+        this.sb.append(methodVoid.getMethodName()).append("(");
         methodVoid.getParameters().visit(this);
         this.sb.append(") {");
+        incrIndentation();
         methodVoid.getBody().visit(this);
-        this.sb.append("\n").append(this.INDENT).append("}");
+        decrIndentation();
+        nlIndent();
+        this.sb.append("}");
         return null;
     }
 
     @Override
     public Void visitMethodReturn(MethodReturn<Void> methodReturn) {
-        this.sb.append("\n").append(this.INDENT).append("private " + getLanguageVarTypeFromBlocklyType(methodReturn.getReturnType()));
-        this.sb.append(" " + methodReturn.getMethodName() + "(");
+        nlIndent();
+        this.sb.append("private ").append(getLanguageVarTypeFromBlocklyType(methodReturn.getReturnType()));
+        this.sb.append(" ").append(methodReturn.getMethodName()).append("(");
         methodReturn.getParameters().visit(this);
         this.sb.append(") {");
+        incrIndentation();
         methodReturn.getBody().visit(this);
         nlIndent();
         this.sb.append("return ");
         methodReturn.getReturnValue().visit(this);
-        this.sb.append(";\n").append(this.INDENT).append("}");
+        this.sb.append(";");
+        decrIndentation();
+        nlIndent();
+        this.sb.append("}");
         return null;
     }
 

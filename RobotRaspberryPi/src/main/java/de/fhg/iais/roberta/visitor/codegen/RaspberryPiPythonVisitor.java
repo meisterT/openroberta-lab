@@ -40,16 +40,14 @@ public final class RaspberryPiPythonVisitor extends AbstractPythonVisitor implem
      *
      * @param brickConfiguration hardware configuration of the brick
      * @param programPhrases to generate the code from
-     * @param indentation to start with. Will be ince/decr depending on block structure
      */
     RaspberryPiPythonVisitor(
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ConfigurationAst brickConfiguration,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
-        int indentation,
         ILanguage language) {
-        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases, indentation);
+        super(usedHardwareBean, codeGeneratorSetupBean, programPhrases);
         this.brickConfiguration = brickConfiguration;
     }
 
@@ -69,7 +67,7 @@ public final class RaspberryPiPythonVisitor extends AbstractPythonVisitor implem
         Assert.notNull(brickConfiguration);
 
         RaspberryPiPythonVisitor astVisitor =
-            new RaspberryPiPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, 0, language);
+            new RaspberryPiPythonVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, language);
         astVisitor.generateCode(withWrapping);
 
         return astVisitor.sb.toString();

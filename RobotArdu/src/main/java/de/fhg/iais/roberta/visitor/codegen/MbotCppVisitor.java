@@ -72,16 +72,14 @@ public final class MbotCppVisitor extends AbstractCommonArduinoCppVisitor implem
      * Initialize the C++ code generator visitor.
      *
      * @param brickConfiguration hardware configuration of the brick
-     * @param programPhrases to generate the code from
-     * @param indentation to start with. Will be incr/decr depending on block structure
+     * @param phrases to generate the code from
      */
     MbotCppVisitor(
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ConfigurationAst brickConfiguration,
-        ArrayList<ArrayList<Phrase<Void>>> phrases,
-        int indentation) {
-        super(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, phrases, indentation);
+        ArrayList<ArrayList<Phrase<Void>>> phrases) {
+        super(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, phrases);
     }
 
     /**
@@ -100,7 +98,7 @@ public final class MbotCppVisitor extends AbstractCommonArduinoCppVisitor implem
         Assert.notNull(brickConfiguration);
 
         final MbotCppVisitor astVisitor =
-            new MbotCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, withWrapping ? 1 : 0);
+            new MbotCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }

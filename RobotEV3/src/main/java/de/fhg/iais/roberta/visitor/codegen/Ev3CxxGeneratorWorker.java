@@ -22,7 +22,6 @@ public final class Ev3CxxGeneratorWorker implements IWorker {
                 project.getProgramName(),
                 project.getConfigurationAst(),
                 project.getProgramAst().getTree(),
-                1,
                 project.getLanguage());
         visitor.setStringBuilders(project.getSourceCode(), project.getIndentation());
         visitor.generateCode(true);

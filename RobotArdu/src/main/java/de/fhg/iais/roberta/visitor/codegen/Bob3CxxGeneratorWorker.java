@@ -12,7 +12,7 @@ public class Bob3CxxGeneratorWorker implements IWorker {
         Object usedHardwareBean = project.getWorkerResult("CollectedHardware");
         Object codeGeneratorSetupBean = project.getWorkerResult("CodeGeneratorSetup");
         Bob3CppVisitor visitor =
-            new Bob3CppVisitor((UsedHardwareBean) usedHardwareBean, (CodeGeneratorSetupBean) codeGeneratorSetupBean, project.getProgramAst().getTree(), 1);
+            new Bob3CppVisitor((UsedHardwareBean) usedHardwareBean, (CodeGeneratorSetupBean) codeGeneratorSetupBean, project.getProgramAst().getTree());
         visitor.setStringBuilders(project.getSourceCode(), project.getIndentation());
         visitor.generateCode(true);
     }

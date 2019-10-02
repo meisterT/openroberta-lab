@@ -17,7 +17,6 @@ public final class VorwerkPythonGeneratorWorker implements IWorker {
                 (CodeGeneratorSetupBean) codeGeneratorSetupBean,
                 project.getConfigurationAst(),
                 project.getProgramAst().getTree(),
-                0,
                 project.getLanguage());
         visitor.setStringBuilders(project.getSourceCode(), project.getIndentation());
         visitor.generateCode(true);

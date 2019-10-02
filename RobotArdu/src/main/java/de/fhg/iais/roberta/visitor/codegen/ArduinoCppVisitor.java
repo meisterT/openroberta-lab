@@ -54,16 +54,14 @@ public final class ArduinoCppVisitor extends AbstractCommonArduinoCppVisitor imp
     /**
      * Initialize the C++ code generator visitor.
      *
-     * @param programPhrases to generate the code from
-     * @param indentation to start with. Will be incr/decr depending on block structure
+     * @param phrases to generate the code from
      */
     ArduinoCppVisitor(
         UsedHardwareBean usedHardwareBean,
         CodeGeneratorSetupBean codeGeneratorSetupBean,
         ConfigurationAst brickConfiguration,
-        ArrayList<ArrayList<Phrase<Void>>> phrases,
-        int indentation) {
-        super(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, phrases, indentation);
+        ArrayList<ArrayList<Phrase<Void>>> phrases) {
+        super(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, phrases);
 
     }
 
@@ -81,7 +79,7 @@ public final class ArduinoCppVisitor extends AbstractCommonArduinoCppVisitor imp
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
         boolean withWrapping) {
         ArduinoCppVisitor astVisitor =
-            new ArduinoCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases, withWrapping ? 1 : 0);
+            new ArduinoCppVisitor(usedHardwareBean, codeGeneratorSetupBean, brickConfiguration, programPhrases);
         astVisitor.generateCode(withWrapping);
         return astVisitor.sb.toString();
     }
