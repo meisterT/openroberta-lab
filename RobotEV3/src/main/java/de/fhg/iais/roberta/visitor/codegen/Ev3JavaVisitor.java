@@ -219,7 +219,7 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         }
         decrIndentation();
         nlIndent();
-        this.sb.append("}");
+        super.generateProgramSuffix(withWrapping);
     }
 
     @Override
@@ -949,137 +949,6 @@ public final class Ev3JavaVisitor extends AbstractJavaVisitor implements IEv3Vis
         listSetIndex.getParam().get(1).visit(this);
 
         this.sb.append(");");
-        return null;
-    }
-
-    @Override
-    public Void visitMathConstrainFunct(MathConstrainFunct<Void> mathConstrainFunct) {
-        this.sb.append("BlocklyMethods.clamp(");
-        mathConstrainFunct.getParam().get(0).visit(this);
-        this.sb.append(", ");
-        mathConstrainFunct.getParam().get(1).visit(this);
-        this.sb.append(", ");
-        mathConstrainFunct.getParam().get(2).visit(this);
-        this.sb.append(")");
-        return null;
-    }
-
-    @Override
-    public Void visitMathNumPropFunct(MathNumPropFunct<Void> mathNumPropFunct) {
-        switch ( mathNumPropFunct.getFunctName() ) {
-            case EVEN:
-                this.sb.append("BlocklyMethods.isEven(");
-                mathNumPropFunct.getParam().get(0).visit(this);
-                this.sb.append(")");
-                break;
-            case ODD:
-                this.sb.append("BlocklyMethods.isOdd(");
-                mathNumPropFunct.getParam().get(0).visit(this);
-                this.sb.append(")");
-                break;
-            case PRIME:
-                this.sb.append("BlocklyMethods.isPrime(");
-                mathNumPropFunct.getParam().get(0).visit(this);
-                this.sb.append(")");
-                break;
-            case WHOLE:
-                this.sb.append("BlocklyMethods.isWhole(");
-                mathNumPropFunct.getParam().get(0).visit(this);
-                this.sb.append(")");
-                break;
-            case POSITIVE:
-                this.sb.append("BlocklyMethods.isPositive(");
-                mathNumPropFunct.getParam().get(0).visit(this);
-                this.sb.append(")");
-                break;
-            case NEGATIVE:
-                this.sb.append("BlocklyMethods.isNegative(");
-                mathNumPropFunct.getParam().get(0).visit(this);
-                this.sb.append(")");
-                break;
-            case DIVISIBLE_BY:
-                this.sb.append("BlocklyMethods.isDivisibleBy(");
-                mathNumPropFunct.getParam().get(0).visit(this);
-                this.sb.append(", ");
-                mathNumPropFunct.getParam().get(1).visit(this);
-                this.sb.append(")");
-                break;
-            default:
-                break;
-        }
-        return null;
-    }
-
-    @Override
-    public Void visitMathOnListFunct(MathOnListFunct<Void> mathOnListFunct) {
-        switch ( mathOnListFunct.getFunctName() ) {
-            case SUM:
-                this.sb.append("BlocklyMethods.sumOnList(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            case MIN:
-                this.sb.append("Collections.min(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            case MAX:
-                this.sb.append("Collections.max(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            case AVERAGE:
-                this.sb.append("BlocklyMethods.averageOnList(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            case MEDIAN:
-                this.sb.append("BlocklyMethods.medianOnList(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            case STD_DEV:
-                this.sb.append("BlocklyMethods.standardDeviatioin(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            case RANDOM:
-                this.sb.append("BlocklyMethods.randOnList(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            case MODE:
-                this.sb.append("BlocklyMethods.modeOnList(");
-                mathOnListFunct.getParam().get(0).visit(this);
-                break;
-            default:
-                break;
-        }
-        this.sb.append(")");
-        return null;
-    }
-
-    @Override
-    public Void visitMathRandomFloatFunct(MathRandomFloatFunct<Void> mathRandomFloatFunct) {
-        this.sb.append("BlocklyMethods.randDouble()");
-        return null;
-    }
-
-    @Override
-    public Void visitMathRandomIntFunct(MathRandomIntFunct<Void> mathRandomIntFunct) {
-        this.sb.append("BlocklyMethods.randInt(");
-        mathRandomIntFunct.getParam().get(0).visit(this);
-        this.sb.append(", ");
-        mathRandomIntFunct.getParam().get(1).visit(this);
-        this.sb.append(")");
-        return null;
-    }
-
-    @Override
-    public Void visitMathPowerFunct(MathPowerFunct<Void> mathPowerFunct) {
-        this.sb.append("BlocklyMethods.pow(");
-        super.visitMathPowerFunct(mathPowerFunct);
-        return null;
-    }
-
-    @Override
-    public Void visitTextJoinFunct(TextJoinFunct<Void> textJoinFunct) {
-        this.sb.append("BlocklyMethods.textJoin(");
-        textJoinFunct.getParam().visit(this);
-        this.sb.append(")");
         return null;
     }
 
