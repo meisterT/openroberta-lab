@@ -8,12 +8,14 @@ import de.fhg.iais.roberta.transformer.CodeGeneratorSetupBean.Builder;
 import de.fhg.iais.roberta.transformer.Project;
 import de.fhg.iais.roberta.visitor.validate.IWorker;
 
-public class UsedMethodCollectorWorker implements IWorker {
+public abstract class AbstractUsedMethodCollectorWorker implements IWorker {
+
+    protected abstract ICollectorVisitor getVisitor(CodeGeneratorSetupBean.Builder builder);
 
     @Override
     public void execute(Project project) {
         CodeGeneratorSetupBean.Builder builder = new Builder();
-        final UsedMethodCollectorVisitor visitor = new UsedMethodCollectorVisitor(builder);
+        final ICollectorVisitor visitor = getVisitor(builder);
         ArrayList<ArrayList<Phrase<Void>>> tree = project.getProgramAst().getTree();
         for ( ArrayList<Phrase<Void>> phrases : tree ) {
             for ( Phrase<Void> phrase : phrases ) {

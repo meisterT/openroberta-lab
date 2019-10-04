@@ -13,11 +13,11 @@ import de.fhg.iais.roberta.transformer.CodeGeneratorSetupBean;
 /**
  * A visitor that keeps track of all methods visited at any point in the AST, that need an additional helper method definition.
  */
-public class UsedMethodCollectorVisitor implements ICollectorVisitor {
+public abstract class AbstractUsedMethodCollectorVisitor implements ICollectorVisitor {
 
-    CodeGeneratorSetupBean.Builder builder;
+    protected CodeGeneratorSetupBean.Builder builder;
 
-    public UsedMethodCollectorVisitor(CodeGeneratorSetupBean.Builder builder) {
+    public AbstractUsedMethodCollectorVisitor(CodeGeneratorSetupBean.Builder builder) {
         this.builder = builder;
     }
 
@@ -53,17 +53,5 @@ public class UsedMethodCollectorVisitor implements ICollectorVisitor {
     public Void visitMathPowerFunct(MathPowerFunct<Void> mathPowerFunct) {
         this.builder.addUsedFunction(FunctionNames.POWER);
         return ICollectorVisitor.super.visitMathPowerFunct(mathPowerFunct);
-    }
-
-    @Override
-    public Void visitMathRandomIntFunct(MathRandomIntFunct<Void> mathRandomIntFunct) {
-        this.builder.addUsedFunction(FunctionNames.RANDOM);
-        return ICollectorVisitor.super.visitMathRandomIntFunct(mathRandomIntFunct);
-    }
-
-    @Override
-    public Void visitMathRandomFloatFunct(MathRandomFloatFunct<Void> mathRandomFloatFunct) {
-        this.builder.addUsedFunction(FunctionNames.RANDOM_DOUBLE);
-        return ICollectorVisitor.super.visitMathRandomFloatFunct(mathRandomFloatFunct);
     }
 }
