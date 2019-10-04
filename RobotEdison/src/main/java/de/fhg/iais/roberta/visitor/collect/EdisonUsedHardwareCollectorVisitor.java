@@ -19,8 +19,9 @@ import de.fhg.iais.roberta.syntax.sensor.generic.IRSeekerSensor;
 import de.fhg.iais.roberta.syntax.sensor.generic.InfraredSensor;
 import de.fhg.iais.roberta.syntax.sensors.edison.ResetSensor;
 import de.fhg.iais.roberta.transformer.UsedHardwareBean;
-import de.fhg.iais.roberta.transformer.UsedHardwareBean.EdisonMethods;
 import de.fhg.iais.roberta.visitor.hardware.IEdisonVisitor;
+
+import static de.fhg.iais.roberta.transformer.UsedHardwareBean.*;
 
 /**
  * This class visits all the sensors/actors of the Edison brick and collects information about them
@@ -28,7 +29,7 @@ import de.fhg.iais.roberta.visitor.hardware.IEdisonVisitor;
 public class EdisonUsedHardwareCollectorVisitor extends AbstractUsedHardwareCollectorVisitor implements IEdisonVisitor<Void> {
 
     public EdisonUsedHardwareCollectorVisitor(
-        UsedHardwareBean.Builder builder,
+        Builder builder,
         ArrayList<ArrayList<Phrase<Void>>> programPhrases,
         ConfigurationAst robotConfiguration) {
         super(builder, robotConfiguration);

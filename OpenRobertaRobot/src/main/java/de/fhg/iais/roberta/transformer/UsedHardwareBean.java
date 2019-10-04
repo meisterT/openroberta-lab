@@ -1,6 +1,7 @@
 package de.fhg.iais.roberta.transformer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,8 +42,7 @@ public class UsedHardwareBean {
     private boolean humidityUsed;
     private boolean calliBotUsed;
 
-    //TODO: from EdisonUsedHardwareVisitor
-    private Set<EdisonMethods> usedMethods = EnumSet.noneOf(EdisonMethods.class); //All needed helper methods as a Set
+    private final Set<Enum<?>> usedMethods = new HashSet<>(); //All needed helper methods as a Set
 
     //TODO: from NXT
     private boolean isVolumeVariableNeeded;
@@ -135,8 +135,8 @@ public class UsedHardwareBean {
         return this.calliBotUsed;
     }
 
-    public Set<EdisonMethods> getUsedMethods() {
-        return this.usedMethods;
+    public Set<Enum<?>> getUsedMethods() {
+        return Collections.unmodifiableSet(this.usedMethods);
     }
 
     public Map<Integer, Boolean> getLoopsLabelContainer() {
@@ -245,7 +245,7 @@ public class UsedHardwareBean {
             return this;
         }
 
-        public Builder addUsedMethod(EdisonMethods usedMethod) {
+        public Builder addUsedMethod(Enum<?> usedMethod) {
             this.usedHardwareBean.usedMethods.add(usedMethod);
             return this;
         }

@@ -19,7 +19,7 @@ import de.fhg.iais.roberta.util.Util1;
 
 public class CodeGeneratorSetupBean {
 
-    private String helperMethodFile = null; // TODO
+    private String helperMethodFile = null; // TODO different method than null check
     private final Set<FunctionNames> usedFunctions = new HashSet<>();
     private List<String> globalVariables = new ArrayList<>();
     private List<String> declaredVariables = new ArrayList<>();
@@ -29,26 +29,13 @@ public class CodeGeneratorSetupBean {
     private boolean isProgramEmpty = false;
     private boolean isListsUsed = false;
     private Map<Integer, Boolean> loopsLabelContainer = new HashMap<>();
-    //TODO: from EdisonUsedHardwareVisitor
-    private final Set<EdisonMethods> usedMethods = EnumSet.noneOf(EdisonMethods.class); //All needed helper methods as a Set
+
     //TODO: from NXT
     private boolean isVolumeVariableNeeded;
 
     private HelperMethodGenerator helperMethodGenerator;
 
     private String fileExtension;
-
-    public enum EdisonMethods {
-        OBSTACLEDETECTION, //Obstacle detection
-        IRSEND, //IR sender
-        IRSEEK, //IR seeker
-        MOTORON, //Motor on / motor on for... block
-        SHORTEN, //shorten a number for Edisons drive() methods
-        GETDIR, //reverse direction when negative speed is applied
-        DIFFCURVE, //for the steer block
-        DIFFDRIVE, //for driving
-        DIFFTURN, //for turning
-    }
 
     public HelperMethodGenerator getHelperMethodGenerator() {
         return this.helperMethodGenerator;
@@ -88,10 +75,6 @@ public class CodeGeneratorSetupBean {
 
     public Map<Integer, Boolean> getLoopsLabelContainer() {
         return this.loopsLabelContainer;
-    }
-
-    public Set<EdisonMethods> getUsedMethods() {
-        return this.usedMethods;
     }
 
     public boolean isVolumeVariableNeeded() {
@@ -148,11 +131,6 @@ public class CodeGeneratorSetupBean {
 
         public Builder setLoopsLabelContainer(Map<Integer, Boolean> loopsLabelContainer) {
             this.codeGeneratorBean.loopsLabelContainer = loopsLabelContainer;
-            return this;
-        }
-
-        public Builder addUsedMethod(EdisonMethods usedMethod) {
-            this.codeGeneratorBean.usedMethods.add(usedMethod);
             return this;
         }
 

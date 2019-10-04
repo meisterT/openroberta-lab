@@ -6,6 +6,7 @@ import de.fhg.iais.roberta.syntax.Phrase;
 import de.fhg.iais.roberta.transformer.CodeGeneratorSetupBean;
 import de.fhg.iais.roberta.transformer.CodeGeneratorSetupBean.Builder;
 import de.fhg.iais.roberta.transformer.Project;
+import de.fhg.iais.roberta.transformer.UsedHardwareBean;
 import de.fhg.iais.roberta.visitor.validate.IWorker;
 
 public abstract class AbstractUsedMethodCollectorWorker implements IWorker {
@@ -22,9 +23,13 @@ public abstract class AbstractUsedMethodCollectorWorker implements IWorker {
                 phrase.visit(visitor); // TODO: REALLY REALLY BAD NAME !!!
             }
         }
+
         builder.setFileExtension(project.getFileExtension());
         builder.setHelperMethodFile(project.getRobotFactory().getPluginProperties().getStringProperty("robot.helperMethods"));
         CodeGeneratorSetupBean bean = builder.build();
+        if (project.getRobot().equals("edison")) { // TODO real solution
+            bean.getHelperMethodGenerator().addAdditionalEnum(UsedHardwareBean.EdisonMethods.class);
+        }
         project.addWorkerResult("CodeGeneratorSetup", bean);
     }
 

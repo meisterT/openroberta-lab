@@ -1,6 +1,7 @@
 package de.fhg.iais.roberta.visitor.codegen;
 
 import static de.fhg.iais.roberta.syntax.lang.functions.FunctionNames.SUM;
+import static de.fhg.iais.roberta.transformer.UsedHardwareBean.*;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,6 @@ import de.fhg.iais.roberta.syntax.sensor.generic.SoundSensor;
 import de.fhg.iais.roberta.syntax.sensors.edison.ResetSensor;
 import de.fhg.iais.roberta.transformer.CodeGeneratorSetupBean;
 import de.fhg.iais.roberta.transformer.UsedHardwareBean;
-import de.fhg.iais.roberta.transformer.UsedHardwareBean.EdisonMethods;
 import de.fhg.iais.roberta.util.dbc.Assert;
 import de.fhg.iais.roberta.util.dbc.DbcException;
 import de.fhg.iais.roberta.visitor.hardware.IEdisonVisitor;
@@ -63,7 +63,6 @@ public class EdisonPythonVisitor extends AbstractPythonVisitor implements IEdiso
      *
      * @param brickConfig hardware configuration of the robot (fixed)
      * @param programPhrases to generate the code from
-     * @param indentation to start with. Will be incremented/decremented depending on block structure
      */
     public EdisonPythonVisitor(
         UsedHardwareBean usedHardwareBean,
