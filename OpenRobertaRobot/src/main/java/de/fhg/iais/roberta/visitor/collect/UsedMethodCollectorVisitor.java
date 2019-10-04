@@ -24,13 +24,13 @@ public class UsedMethodCollectorVisitor implements ICollectorVisitor {
     @Override
     public Void visitMathNumPropFunct(MathNumPropFunct<Void> mathNumPropFunct) {
         this.builder.addUsedFunction(mathNumPropFunct.getFunctName());
-        return null;
+        return ICollectorVisitor.super.visitMathNumPropFunct(mathNumPropFunct);
     }
 
     @Override
     public Void visitMathOnListFunct(MathOnListFunct<Void> mathOnListFunct) {
         this.builder.addUsedFunction(mathOnListFunct.getFunctName());
-        return null;
+        return ICollectorVisitor.super.visitMathOnListFunct(mathOnListFunct);
     }
 
     @Override
@@ -40,30 +40,30 @@ public class UsedMethodCollectorVisitor implements ICollectorVisitor {
         } else {
             this.builder.addUsedFunction(mathSingleFunct.getFunctName());
         }
-        return null;
+        return ICollectorVisitor.super.visitMathSingleFunct(mathSingleFunct);
     }
 
     @Override
     public Void visitListRepeat(ListRepeat<Void> listRepeat) {
         this.builder.addUsedFunction(FunctionNames.LISTS_REPEAT);
-        return null;
+        return ICollectorVisitor.super.visitListRepeat(listRepeat);
     }
 
     @Override
     public Void visitMathPowerFunct(MathPowerFunct<Void> mathPowerFunct) {
         this.builder.addUsedFunction(FunctionNames.POWER);
-        return null;
+        return ICollectorVisitor.super.visitMathPowerFunct(mathPowerFunct);
     }
 
     @Override
     public Void visitMathRandomIntFunct(MathRandomIntFunct<Void> mathRandomIntFunct) {
         this.builder.addUsedFunction(FunctionNames.RANDOM);
-        return null;
+        return ICollectorVisitor.super.visitMathRandomIntFunct(mathRandomIntFunct);
     }
 
     @Override
     public Void visitMathRandomFloatFunct(MathRandomFloatFunct<Void> mathRandomFloatFunct) {
         this.builder.addUsedFunction(FunctionNames.RANDOM_DOUBLE);
-        return null;
+        return ICollectorVisitor.super.visitMathRandomFloatFunct(mathRandomFloatFunct);
     }
 }
