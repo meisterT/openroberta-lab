@@ -54,4 +54,16 @@ public abstract class AbstractUsedMethodCollectorVisitor implements ICollectorVi
         this.builder.addUsedFunction(FunctionNames.POWER);
         return ICollectorVisitor.super.visitMathPowerFunct(mathPowerFunct);
     }
+
+    @Override
+    public Void visitMathRandomIntFunct(MathRandomIntFunct<Void> mathRandomIntFunct) {
+        this.builder.addUsedFunction(FunctionNames.RANDOM);
+        return ICollectorVisitor.super.visitMathRandomIntFunct(mathRandomIntFunct);
+    }
+
+    @Override
+    public Void visitMathRandomFloatFunct(MathRandomFloatFunct<Void> mathRandomFloatFunct) {
+        this.builder.addUsedFunction(FunctionNames.RANDOM_DOUBLE);
+        return ICollectorVisitor.super.visitMathRandomFloatFunct(mathRandomFloatFunct);
+    }
 }

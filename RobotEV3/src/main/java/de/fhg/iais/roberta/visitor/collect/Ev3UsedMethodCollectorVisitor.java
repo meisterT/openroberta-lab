@@ -9,16 +9,4 @@ public class Ev3UsedMethodCollectorVisitor extends AbstractUsedMethodCollectorVi
     public Ev3UsedMethodCollectorVisitor(CodeGeneratorSetupBean.Builder builder) {
         super(builder);
     }
-
-    @Override
-    public Void visitMathRandomIntFunct(MathRandomIntFunct<Void> mathRandomIntFunct) {
-        this.builder.addUsedFunction(FunctionNames.RANDOM);
-        return super.visitMathRandomIntFunct(mathRandomIntFunct);
-    }
-
-    @Override
-    public Void visitMathRandomFloatFunct(MathRandomFloatFunct<Void> mathRandomFloatFunct) {
-        this.builder.addUsedFunction(FunctionNames.RANDOM_DOUBLE);
-        return super.visitMathRandomFloatFunct(mathRandomFloatFunct);
-    }
 }
