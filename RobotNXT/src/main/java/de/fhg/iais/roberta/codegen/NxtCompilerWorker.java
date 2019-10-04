@@ -36,9 +36,6 @@ public class NxtCompilerWorker implements IWorker {
      * 3. Compile .java files to .class.<br>
      * 4. Make jar from class files and add META-INF entries.<br>
      *
-     * @param token
-     * @param mainFile
-     * @param mainPackage
      */
     Key runBuild(Project project) {
         String token = project.getToken();
