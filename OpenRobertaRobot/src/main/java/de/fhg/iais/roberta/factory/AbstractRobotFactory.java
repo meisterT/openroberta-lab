@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import de.fhg.iais.roberta.codegen.HelperMethodGenerator;
 import de.fhg.iais.roberta.util.PluginProperties;
 import de.fhg.iais.roberta.util.Util1;
-import de.fhg.iais.roberta.util.dbc.Assert;
 import de.fhg.iais.roberta.util.dbc.DbcException;
 import de.fhg.iais.roberta.visitor.validate.IWorker;
 
@@ -27,7 +26,7 @@ public abstract class AbstractRobotFactory implements IRobotFactory {
     protected final String programDefault;
     protected final String configurationToolbox;
     protected final String configurationDefault;
-    protected Map<String, IWorker> workers = new HashMap<>(); //worker type to impllementing class(es) collect->de.fhg.iais.roberta.visitor.collect.Ev3UsedHardwareCollectorWorker
+    protected Map<String, List<IWorker>> workers = new HashMap<>(); //worker type to impllementing class(es) collect->de.fhg.iais.roberta.visitor.collect.Ev3UsedHardwareCollectorWorker
     protected Map<String, List<String>> workflows = new HashMap<>(); //workflow name to a list of types of applicable workers: showsource->collect,generate
 
     public AbstractRobotFactory(PluginProperties pluginProperties) {
@@ -194,7 +193,10 @@ public abstract class AbstractRobotFactory implements IRobotFactory {
                     LOG.debug("Loading worker " + workerClassName);
                     try {
                         IWorker newWorker = (IWorker) Class.forName(workerClassName).newInstance();
-                        Assert.isNull(this.workers.put(workersType, newWorker));
+                        if ( this.workers.get(workersType) == null ) {
+                            this.workers.put(workersType, new ArrayList<IWorker>());
+                        }
+                        this.workers.get(workersType).add(newWorker);
                     } catch ( InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException | SecurityException e ) {
                         throw new DbcException("Provided worker class is invalid", e);
                     }
@@ -231,7 +233,7 @@ public abstract class AbstractRobotFactory implements IRobotFactory {
         List<String> workerTypes = this.workflows.get(workflow);
         List<IWorker> workerPipe = new ArrayList<>();
         for ( String type : workerTypes ) {
-            workerPipe.add(this.workers.get(type));
+            workerPipe.addAll(this.workers.get(type));
         }
         return workerPipe;
     }

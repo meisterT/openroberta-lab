@@ -19,7 +19,8 @@ import de.fhg.iais.roberta.util.Util1;
 
 public class CodeGeneratorSetupBean {
 
-    private Set<FunctionNames> usedFunctions = new HashSet<>();
+    private String helperMethodFile = null; // TODO
+    private final Set<FunctionNames> usedFunctions = new HashSet<>();
     private List<String> globalVariables = new ArrayList<>();
     private List<String> declaredVariables = new ArrayList<>();
     private List<VarDeclaration<Void>> visitedVars = new ArrayList<>();
@@ -29,7 +30,7 @@ public class CodeGeneratorSetupBean {
     private boolean isListsUsed = false;
     private Map<Integer, Boolean> loopsLabelContainer = new HashMap<>();
     //TODO: from EdisonUsedHardwareVisitor
-    private Set<EdisonMethods> usedMethods = EnumSet.noneOf(EdisonMethods.class); //All needed helper methods as a Set
+    private final Set<EdisonMethods> usedMethods = EnumSet.noneOf(EdisonMethods.class); //All needed helper methods as a Set
     //TODO: from NXT
     private boolean isVolumeVariableNeeded;
 
@@ -50,7 +51,7 @@ public class CodeGeneratorSetupBean {
     }
 
     public HelperMethodGenerator getHelperMethodGenerator() {
-        return helperMethodGenerator;
+        return this.helperMethodGenerator;
     }
 
     public Set<FunctionNames> getUsedFunctions() {
@@ -98,7 +99,12 @@ public class CodeGeneratorSetupBean {
     }
 
     public static class Builder {
-        private CodeGeneratorSetupBean codeGeneratorBean = new CodeGeneratorSetupBean();
+        private final CodeGeneratorSetupBean codeGeneratorBean = new CodeGeneratorSetupBean();
+
+        public Builder setHelperMethodFile(String file) {
+            this.codeGeneratorBean.helperMethodFile = file;
+            return this;
+        }
 
         public Builder addUsedFunction(FunctionNames usedFunction) {
             this.codeGeneratorBean.usedFunctions.add(usedFunction);
@@ -162,7 +168,8 @@ public class CodeGeneratorSetupBean {
 
         public CodeGeneratorSetupBean build() {
             JSONObject helperMethods = new JSONObject();
-            String helperMethodFile = "classpath:/helperMethodsCommon.yml"; // TODO is this nice?
+            String helperMethodFile =
+                this.codeGeneratorBean.helperMethodFile == null ? "classpath:/helperMethodsCommon.yml" : this.codeGeneratorBean.helperMethodFile; // TODO is this nice?
             Util1.loadYAMLRecursive("", helperMethods, helperMethodFile, true);
             this.codeGeneratorBean.helperMethodGenerator =
                 new HelperMethodGenerator(helperMethods, AbstractRobotFactory.getLanguageFromFileExtension(this.codeGeneratorBean.fileExtension));
