@@ -8,7 +8,7 @@ import de.fhg.iais.roberta.transformer.CodeGeneratorSetupBean.Builder;
 import de.fhg.iais.roberta.transformer.Project;
 import de.fhg.iais.roberta.visitor.validate.IWorker;
 
-public class Ev3UsedMethodCollectorWorker implements IWorker {
+public class UsedMethodCollectorWorker implements IWorker {
 
     @Override
     public void execute(Project project) {
