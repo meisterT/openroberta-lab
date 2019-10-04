@@ -8,6 +8,7 @@ import static de.fhg.iais.roberta.mode.general.ListElementOperations.SET;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -73,7 +74,7 @@ import de.fhg.iais.roberta.visitor.lang.codegen.AbstractLanguageVisitor;
 public abstract class AbstractPythonVisitor extends AbstractLanguageVisitor {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractPythonVisitor.class);
 
-    protected Set<String> usedGlobalVarInFunctions;
+    protected Set<String> usedGlobalVarInFunctions = new HashSet<>();
     protected boolean isProgramEmpty = false;
 
     /**
