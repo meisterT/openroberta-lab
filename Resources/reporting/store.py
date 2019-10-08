@@ -83,7 +83,7 @@ class Store:
         return item is not None
 
     def close(self, key):
-        item = self.data.get(key)
+        item = self.data.get(key, None)
         if item is not None:
             self.openKeyCounter -= 1
             item.state = 'close'

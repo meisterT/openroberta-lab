@@ -25,9 +25,11 @@ if __name__ == "__main__":
     #groupLogEntries(fromTime,untilTime,'h',lfile,'event','code generation started')
     #groupStatActions(fromTime,untilTime,'h',sfile,'Initialization') # 'Initialization' 'UserLogin' 'SimulationRun' 'ProgramRun' 'ProgramRunBack'
     #groupCountryCode(fromTime,untilTime,'h',sfile)
-    processInitData(fromTime,untilTime,sfile)
-    processRobotUsage(fromTime,untilTime,sfile)
+    #processInitData(fromTime,untilTime,sfile)
+    #processRobotUsage(fromTime,untilTime,sfile)
     #processSessions('2019-10-08 03:00:00','9999',ofile)
+    #sessionsAfterLastServerRestart(fromTime,untilTime,sfile)
+    openSessionsAfterLastServerRestart(fromTime,untilTime,sfile)
     
     end = time.time()
     print("run for {:.3f} sec".format(end - start))

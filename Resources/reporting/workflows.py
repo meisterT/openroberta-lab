@@ -54,6 +54,37 @@ def processSessions(fromTime, untilTime, fileName):
         .groupStore(groupInits)
     showStore(groupInits,fmt='{:12s} {:5d}',title='session inits grouped by ' + grouper)
 
+def sessionsAfterLastServerRestart(fromTime, untilTime, fileName):
+    grouper='m'
+    sessionIdStore = None
+    groupInits = None
+    def resetStores():
+        nonlocal sessionIdStore, groupInits
+        sessionIdStore = Store()
+        groupInits = Store(groupBy=grouper)
+    resetStores()
+    for line in getReader(fileName):
+        fromStat(line).after(fromTime).before(untilTime).filterVal('action','ServerStart',substring=False).exec(resetStores).reset()\
+        .filterVal('action','Initialization').uniqueKey('sessionId', sessionIdStore).groupStore(groupInits)
+    print('number of sessions found: ' + str(groupInits.totalKeyCounter))
+    showStore(groupInits,fmt='{:12s} {:5d}',title='session inits after the last server restart grouped by ' + grouper)
+
+def openSessionsAfterLastServerRestart(fromTime, untilTime, fileName):
+    actionStore = None
+    def resetStore():
+        nonlocal actionStore
+        actionStore = Store(storeList=True)
+    resetStore()
+    for line in getReader(fileName):
+        fromStat(line).after(fromTime).before(untilTime).filterVal('action','ServerStart',substring=False).exec(resetStore).reset()\
+        .after(fromTime).before(untilTime).keyValStore('sessionId','action',actionStore)\
+        .filterVal('action','SessionDestroy').closeKey('sessionId', actionStore)
+    print('number of sessions: ' + str(actionStore.totalKeyCounter))
+    print('number of open sessions: ' + str(actionStore.openKeyCounter))
+    for key, item in actionStore.data.items():
+        if item.state == 'open':
+            print('{:12s} {}'.format(key,item.storeList))
+
 def processRobotUsage(fromTime, untilTime, fileName):
     sessionIdRobotSet = Store(storeSet=True)
     for line in getReader(fileName):
