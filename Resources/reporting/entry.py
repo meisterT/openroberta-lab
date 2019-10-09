@@ -18,11 +18,12 @@ class Entry:
     # reset in 'getReader from util.py'!
     serverRestartNumber = 0 # used to count the server restarts. This number is needed to de-duplicate the session-id
     
-    def __init__(self, entry):
+    def __init__(self, entry, printer=None):
         normalize(entry)
         self.entry = entry
         self.original = entry
         self.assembled = None
+        self.printer = printer
 
     def filter(self, lambdaFct, negate=False):
         """
@@ -283,7 +284,7 @@ class Entry:
         REDUCE: show the values keys 'time' and the original event of an entry 
         """
         if self.entry is not None:
-            print('{:25} {}'.format(self.entry['time'], self.entry['event']))
+            self.printer('{:25} {}'.format(self.entry['time'], self.entry['event']))
         return self
     
     def showKey(self, key):
@@ -293,7 +294,7 @@ class Entry:
         :param key whose value should be shown
         """
         if self.entry is not None:
-            print('{:25} {}'.format(self.entry['time'], self.entry[key]))
+            self.printer('{:25} {}'.format(self.entry['time'], self.entry[key]))
         return self
     
     def showEntry(self):
@@ -303,7 +304,7 @@ class Entry:
         :param entry to be used
         """
         if self.entry is not None:
-            print('{:25} {}'.format(self.entry['time'], str(self.entry)))
+            self.printer('{:25} {}'.format(self.entry['time'], str(self.entry)))
         return self
     
 def normalize(entry):

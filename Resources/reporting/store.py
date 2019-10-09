@@ -11,17 +11,8 @@ keeps track of key-value pairs in different ways:
 @author: rbudde
 '''
 
-__groupTimePrefix = {
-        'm': 7,
-        'd': 10,
-        'h': 13,
-        'm': 16,
-        's': 19
-    }
-
-def getPrefix(granularity, time):
-    prefix = __groupTimePrefix.get(granularity, 10)
-    return time[:prefix]
+import numpy as np
+import matplotlib.pyplot as plt
 
 class Item:
     def __init__(self, storeSet=False, storeList=False):
@@ -38,6 +29,8 @@ class Item:
             self.storeList.append(val) # or (key,val)?
 
 class Store:
+    printer = print
+    
     def __init__(self, storeSet=False, storeList=False, groupBy=None):
         self.data = {}
         self.storeSet = storeSet
@@ -45,15 +38,6 @@ class Store:
         self.groupBy = groupBy
         self.totalKeyCounter = 0
         self.openKeyCounter = 0
-
-    def show(self, header):
-        print(header)
-        for id, data in self.data.items():
-            if data.state == 'open':
-                print('{:10s} : {}'.format(id, str(data)))
-        print(header)
-        print('opened: ' + str(self.totalKeyCounter))
-        print('open:   ' + str(self.openKeyCounter))
 
     def put(self, key, val):
         if self.groupBy is not None:
@@ -69,14 +53,26 @@ class Store:
     def group(self, time):
         if self.groupBy is None:
             raise Exception('grouping needs a groupBy-store')
-        prefix = getPrefix(self.groupBy, time)
+        prefix = self.__getPrefix(self.groupBy, time)
         item = self.data.get(prefix,None)
         if item is None:
             item = Item(storeSet=None, storeList=None)
             self.data[prefix] = item
             self.totalKeyCounter += 1
             self.openKeyCounter += 1
-        item.put(None) # only count 
+        item.put(None) # only count
+        
+    __groupTimePrefix = {
+        'm': 7,
+        'd': 10,
+        'h': 13,
+        'm': 16,
+        's': 19
+    }
+
+    def __getPrefix(self, granularity, time):
+        prefix = self.__groupTimePrefix.get(granularity, 10)
+        return time[:prefix]
 
     def has(self, key):
         item = self.data.get(key,None)
@@ -87,3 +83,66 @@ class Store:
         if item is not None:
             self.openKeyCounter -= 1
             item.state = 'close'
+
+    def showOpen(self, header):
+        Store.printer(header)
+        for id, data in self.data.items():
+            if data.state == 'open':
+                Store.printer('{:10s} : {}'.format(id, str(data)))
+        Store.printer(header)
+        Store.printer('opened: ' + str(self.totalKeyCounter))
+        Store.printer('open:   ' + str(self.openKeyCounter))
+    
+    def show(self, fmt = '{:25} {}', title = None):
+        """
+        show the content of a store
+        
+        :param fmt to be used for printing, default '{:25} {}'. E.g. '{},{}'
+        """
+        if title is not None:
+            Store.printer('\n' + str(title))
+        if not self.storeList and not self.storeSet:
+            for key, val in self.data.items():
+                Store.printer(fmt.format(key, val.counter))
+        if self.storeList:
+            for key, val in self.data.items():
+                Store.printer(fmt.format(key, val.counter, val.storeList))
+        if self.storeSet:
+            for key, val in self.data.items():
+                Store.printer(fmt.format(key, val.counter, val.storeSet))
+    
+    def showPie(self, title='pie plot', file='D:/downloads/pie.png'):
+        """
+        REDUCE: show the content of a store as a pie chart
+        
+        :param title title to be used
+        :param file for the plot output
+        """
+        plt.close()
+        keys = np.char.array(list(self.data.keys()))
+        counters = np.array(list(map(lambda v: v.counter, self.data.values())))
+        percent = 100.*counters/counters.sum()
+        patches, texts = plt.pie(counters, startangle=90, radius=1.2)
+        labels = ['{0} - {1:1.2f} %'.format(i,j) for i,j in zip(keys, percent)]
+        patches, labels, dummy =  zip(*sorted(zip(patches, labels, counters), key=lambda x: x[2], reverse=True))
+        plt.legend(patches, labels, loc='best', bbox_to_anchor=(-0.1, 1.), fontsize=8)
+        #plt.title(title)
+        plt.savefig(file, bbox_inches='tight')
+        
+    def showBar(self, title='bar plot', legend='best', file='D:/downloads/bar.png'):
+        """
+        REDUCE: show the content of a store as a bar chart
+        
+        :param title title to be used
+        :param file for the plot output
+        """
+        plt.close()
+        keys = list(self.data.keys())
+        counters = list(map(lambda v: v.counter, self.data.values()))
+        bar = plt.bar(keys, counters, color='rgbkymc')
+        plt.xticks(keys, rotation='vertical')
+        plt.title(title)
+        if legend is not None:
+            labels = ['{0} - {1:6d}'.format(i,j) for i,j in zip(keys, counters)]
+            plt.legend(bar, labels, loc=legend)
+        plt.savefig(file, bbox_inches='tight')
