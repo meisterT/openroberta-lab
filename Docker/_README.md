@@ -160,7 +160,7 @@ The name of the docker images and the name of the running containers are:
 
 Generating the images is done by using the data from `decl.sh` from the server directory. Generation will:
 
-* pull actual data into a Git repo and checkout the branch/commit as declared (you can suppress this step by setting `GIT_UPTODATE=true`)
+* pull actual data into a Git repo and checkout the branch/commit as declared (you can suppress this step by setting `GIT_PULL_BEFORE_BUILD to false`)
 * run `mvn clean install -DskipTests`
 * export the server into the export directory
 * create the docker image from that directory
