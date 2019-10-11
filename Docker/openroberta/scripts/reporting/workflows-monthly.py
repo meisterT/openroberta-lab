@@ -62,8 +62,8 @@ def monthly(logDir, logFile, outputDir, printer=print):
 
 if __name__ == "__main__":
     logDir = sys.argv[1]
-    outputDir = sys.argv[2]
-    logFile = sys.argv[3]
+    logFile = sys.argv[2]
+    outputDir = sys.argv[3]
     outputFile = sys.argv[4] if len(sys.argv) >=5 else None
     if outputFile is None:
         printer = print
