@@ -9,10 +9,11 @@ then
         MONTH=12
     fi
 fi
+MONTH=$(printf "%02d" $MONTH)
 echo '******************** '$DATE' ********************'
 echo "generating the monthly statistics for month $MONTH"
 YEAR=$(date +'%Y')
-STATISTICS_DIR=${SERVER_DIR}/${SERVER_NAME}/admin/logging/log-$YEAR
+STATISTICS_DIR=${SERVER_DIR}/${SERVER_NAME}/admin/logging/statistics-$YEAR
 isDirectoryValid $STATISTICS_DIR
 REPORT_DIR=${SERVER_DIR}/${SERVER_NAME}/admin/reports-$YEAR
 mkdir -p $REPORT_DIR
@@ -26,6 +27,11 @@ for F do
     fi
     FILE=$F
 done
-echo "statistics generated from file $FILE are written to directory $STATISTICS_DIR"
+if [ -r "$FILE" ]
+then
+    echo "statistics generated from file $FILE are written to directory $REPORT_DIR"
+    $PYTHON $SCRIPT_REPORTING/workflows-monthly.py $STATISTICS_DIR $REPORT_DIR textResults-$MONTH.txt
+else
+    echo "file $FILE is not readable. No statistics could be generated"
+fi
 
-$PYTHON $SCRIPT_REPORTING/workflows-monthly.py $STATISTICS_DIR $REPORT_DIR textResults-$MONTH.txt
