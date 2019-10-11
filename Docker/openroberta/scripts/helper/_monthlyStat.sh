@@ -19,6 +19,7 @@ REPORT_DIR=${SERVER_DIR}/${SERVER_NAME}/admin/reports-$YEAR
 mkdir -p $REPORT_DIR
 
 FILE=''
+cd $STATISTICS_DIR
 set ${MONTH}*
 for F do
     if [[ "$FILE" != '' ]]
@@ -30,7 +31,7 @@ done
 if [ -r "$FILE" ]
 then
     echo "statistics generated from file $FILE are written to directory $REPORT_DIR"
-    $PYTHON $SCRIPT_REPORTING/workflows-monthly.py $STATISTICS_DIR $REPORT_DIR textResults-$MONTH.txt
+    $PYTHON $SCRIPT_REPORTING/workflows-monthly.py $STATISTICS_DIR $FILE $REPORT_DIR textResults-$MONTH.txt
 else
     echo "file $FILE is not readable. No statistics could be generated"
 fi

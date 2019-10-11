@@ -10,16 +10,6 @@ from util import *
 from store import *
 from entry import *
 
-def monthly(baseDirOfLogData, outputDir, printer=print):
-    Store.printer = printer
-    fromTime = '0000'
-    untilTime = '9999'
-    currentMonth = datetime.now().month
-    lastMonth = '{:02d}'.format(currentMonth - 1 if currentMonth > 1 else 12)
-    fileName = lastMonth + '.log.zip'
-    processInitData(baseDirOfLogData,fileName,outputDir)
-    processRobotUsage(fromTime,untilTime,baseDirOfLogData,fileName)
-
 def processInitData(logDir, logFileNameOptionallyWithZip, outputDir, fromTime='0000', untilTime='9999'):
     sessionIdStore = Store()
     groupInits = Store(groupBy='d')
@@ -63,16 +53,24 @@ def processRobotUsage(fromTime, untilTime, baseDir, fileName):
     invertStore(sessionIdRobotSet,robotSessionIdSet)
     robotSessionIdSet.show(fmt='{:40s} {:5d}',title='robotName used w.o. init+change')
 
+def monthly(logDir, logFile, outputDir, printer=print):
+    Store.printer = printer
+    fromTime = '0000'
+    untilTime = '9999'
+    processInitData(logDir,logFile,outputDir)
+    processRobotUsage(fromTime,untilTime,logDir,logFile)
+
 if __name__ == "__main__":
     logDir = sys.argv[1]
     outputDir = sys.argv[2]
-    outputFile = sys.argv[3] if len(sys.argv) >=4 else None
+    logFile = sys.argv[3]
+    outputFile = sys.argv[4] if len(sys.argv) >=5 else None
     if outputFile is None:
         printer = print
     else:
         outputFileHandle = open(outputDir + '/' + outputFile, 'w')
         printer = lambda text: outputFileHandle.write(text + '\n')
     start = time.time()
-    monthly(logDir, outputDir, printer=printer)
+    monthly(logDir, logFile, outputDir, printer=printer)
     end = time.time()
     print("run finished after {:.3f} sec".format(end - start)) 
